@@ -1,16 +1,16 @@
 import { NextResponse } from 'next/server';
 import { createClient } from '@supabase/supabase-js';
 
-// Use service role key to bypass RLS and fetch hidden test cases securely
-const supabase = createClient(
-  process.env.NEXT_PUBLIC_SUPABASE_URL!, 
-  process.env.SUPABASE_SERVICE_KEY!
-);
-
 const JUDGE0_API_URL = process.env.JUDGE0_API_URL || 'http://localhost:2358';
 
 export async function POST(req: Request) {
   try {
+    // Initialize inside the function so it doesn't crash the Next.js build process
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL || 'https://placeholder.supabase.co', 
+      process.env.SUPABASE_SERVICE_KEY || 'placeholder'
+    );
+
     const { userId, problemId, sourceCode, languageId } = await req.json();
 
     console.log(`[API] Received submission from ${userId} for problem ${problemId}`);
